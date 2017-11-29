@@ -1,0 +1,19 @@
+
+
+ r = min(min(real_data)) + (max(max(real_data))-min(min(real_data))).*(rand(size(real_data,1),size(real_data,2)));
+ Num_iter = 100;max_acc = [];
+ for i = 1:Num_iter
+    gh = [];gr = []; 
+    for j = 1:size(r,2)
+       for k = 1:size(r,2)
+           gh = horzcat(gh,MutualInfo((r(:,j)),(r(:,k)))); 
+       end 
+       gr = vertcat(gr,gh); 
+       gh = []; 
+    end 
+    gr(logical(eye(size(gr)))) = [];%remove diagonal elements
+    max_acc = horzcat(max_acc,max(max(gr)));
+    gr=[];
+end
+
+threshold = mean(max_acc);%Threshold to detect significant associations.
