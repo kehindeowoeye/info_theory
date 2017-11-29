@@ -1,0 +1,23 @@
+function ml2 = kldiv(input)
+ctot = input;
+%Where input is an already segmented time series of movement data
+%on approximately a monthly basis arranged column-wise.
+for i = 1:size(ctot,2)
+    op = ctot(:,i);
+    op(op == 0) = [];
+    [a,b] = ksdensity(op);
+    ml = horzcat(ml,a');
+    %ml = horzcat(ml, m1(:,i)/sum(m1(:,i)));
+end
+
+ml2 = [];mkl=[];
+
+for j = 1:size(ctot,2)
+   kl = ((ml(:,1)+eps).*(log(ml(:,1)+eps)-log(ml(:,j)+eps)));
+   kl1 = ((ml(:,j)+eps).*(log(ml(:,j)+eps)-log(ml(:,1)+eps)));
+   kl = (kl(~isinf(kl)));
+   kl = sum(kl(~isnan(kl)));
+   kl1 = (kl1(~isinf(kl1)));
+   kl1 = sum(kl1(~isnan(kl1)));
+   ml2 = horzcat(ml2,(kl+kl1));
+end
