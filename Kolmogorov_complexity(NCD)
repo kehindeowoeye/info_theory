@@ -1,0 +1,16 @@
+library('readxl')
+data<-read_excel('sea_data.xls'); 
+library('TSclust')   
+gec <- vector()
+gec1 <- vector()
+yy<-dim(data)
+z<-1:yy[2]
+
+
+for (t in z) {
+   for (m in z) {
+      gec<-c(gec,diss.NCD(as.numeric(sapply(data[t], floatToBin)),as.numeric(sapply(data[m], floatToBin))))
+   }
+   gec1<-c(gec1,gec)
+   gec <- vector() 
+}
