@@ -28,26 +28,8 @@ for i = 1:lsg
           m4(j)= 'I'; 
        elseif (m4(j)>=bound(10) && m4(j)<bound(11)); 
            m4(j)= 'J'; 
-       elseif (m4(j)>=bound(11) && m4(j)<bound(12)); 
-           m4(j)= 'K'; 
-       elseif (m4(j)>=bound(12) && m4(j)<bound(13)); 
-           m4(j)= 'L'; 
-       elseif (m4(j)>=bound(13) && m4(j)<bound(14)); 
-           m4(j)= 'M'; 
-       elseif (m4(j)>=bound(14) && m4(j)<bound(15)); 
-           m4(j)= 'N'; 
-       elseif (m4(j)>=bound(15) && m4(j)<bound(16)); 
-           m4(j)= 'O'; 
-       elseif (m4(j)>=bound(16) && m4(j)<bound(17)); 
-           m4(j)= 'P'; 
-       elseif (m4(j)>=bound(17) && m4(j)<bound(18)); 
-           m4(j)= 'Q'; 
-       elseif (m4(j)>=bound(18) && m4(j)<bound(19)); 
-           m4(j)= 'R'; 
-       elseif (m4(j)>=bound(19) && m4(j)<bound(20)); 
-           m4(j)= 'S'; 
        else 
-           m4(j) = 'T'; 
+           m4(j) = 'K'; 
        end                                  
     end 
        m5 = vertcat(m5,m4); 
