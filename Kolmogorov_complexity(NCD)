@@ -1,5 +1,5 @@
 library('readxl')
-data<-read_excel('sea_data.xls'); 
+data<-read_excel('data.xls'); 
 library('TSclust')   
 gec <- vector()
 gec1 <- vector()
