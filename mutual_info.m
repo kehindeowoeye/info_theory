@@ -1,6 +1,7 @@
 function gr = mutual_info(dez)
 %Download the mutual information function from the
 %Matlab information theory File exchange site.
+%https://uk.mathworks.com/matlabcentral/fileexchange/29039-mutual-information-2-variablle?focused=5169316&tab=function
 %The input should be a columnn wise matrix of the
 %time-series of interest. 
 gh = [];gr = []; 
