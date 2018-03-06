@@ -1,7 +1,7 @@
 
 
  r = min(min(real_data)) + (max(max(real_data))-min(min(real_data))).*(rand(size(real_data,1),size(real_data,2)));
- Num_iter = 100;max_acc = [];
+ Num_iter = 10;max_acc = [];
  for i = 1:Num_iter
     gh = [];gr = []; 
     for j = 1:size(r,2)
