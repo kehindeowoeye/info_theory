@@ -1,0 +1,41 @@
+%666 points per month on the average * the number of months of interest.
+%leoacc.xls
+%Paper:Environmental drivers of variability
+%in the movement ecology of turkey
+%vultures (Cathartes aura) in North and
+%South America
+
+
+
+leoacc1 = xlsread('leoacc');
+leoacc = leoacc1(1:24662);
+a5 = 0:666:length(leoacc);
+a6 = [];a7 = 1;
+for i = 1:length(a5)-1
+    a6 = horzcat(a6,leoacc(a5(i)+1:a5(i)+666));
+end
+    
+    ml = [];ctot = a6;
+for i = 1:37
+    op = ctot(:,i);
+    op(op == 0) = [];
+    [a,b] = ksdensity(op);
+    ml = horzcat(ml,a');
+    %ml = horzcat(ml, m1(:,i)/sum(m1(:,i)));
+end
+
+ml2 = [];mkl=[];allofme=[];
+
+  for ll = 2:12
+    for j = 1:37
+        kl = ((ml(:,ll)+eps).*(log(ml(:,ll)+eps)-log(ml(:,j)+eps)));
+        kl1 = ((ml(:,j)+eps).*(log(ml(:,j)+eps)- log(ml(:,ll)+eps)));
+        kl = (kl(~isinf(kl)));
+        kl = sum(kl(~isnan(kl)));
+        kl1 = (kl1(~isinf(kl1)));
+        kl1 = sum(kl1(~isnan(kl1)));
+        ml2 = horzcat(ml2,(kl+kl1));
+    end
+    allofme = horzcat(allofme,ml2');
+    ml2=[];
+  end
