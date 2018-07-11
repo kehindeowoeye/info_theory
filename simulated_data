@@ -146,6 +146,8 @@ end
 
 
 library('readxl')
+library('rio')
+library('openxlsx')
 data<-read.csv(file = "/Users/kehindeowoeye/Documents/MATLAB/HDPHMM_HDPSLDS-master/shortncd.csv");
 library('TSclust')   
 gec <- vector()
@@ -166,9 +168,9 @@ for (t in z) {
 
 
 
-library('readxl')
+
 data<-read.csv(file = "/Users/kehindeowoeye/Documents/MATLAB/HDPHMM_HDPSLDS-master/longncd.csv");
-library('TSclust')   
+  
 gec <- vector()
 gec1 <- vector()
 yy<-dim(data)
