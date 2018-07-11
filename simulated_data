@@ -1,0 +1,186 @@
+% %Data for Kolmogorov complexity
+% 
+mu = [0.0001 0.0001;0.001 0.001;0.01 0.01;0.1 0.1;...
+      1 1;1.5 1.5;2 2;2.5 2.5;3 3;3.5 3.5];
+mu = mu*10;
+
+vb = {};
+for i = 1:10
+    v = mu(i,:);
+    sigma = [v(1)+v(1)/4 v(1)+v(1)/4;v(1)+v(1)/4 v(1)+v(1)/4];
+    rng default
+    vb{i} = mvnrnd(v,sigma,10000);
+end
+
+
+
+
+kc_year = [];lodo = [];ca=[];ini_po=[0,0];
+
+%representative of movement for one year.
+for j = 1:10  
+    for m = 1:5
+       for i = 1:8760
+           cd = vb{j};
+           cd1  = cd(randsample(1:10000,1),:);
+           ini_po = ini_po + cd1; 
+           ca = vertcat(ca,ini_po);  
+           
+       end
+       lodo = horzcat(lodo,ca);ca=[];ini_po=[0,0];
+    end
+   kc_year = horzcat(kc_year,lodo);
+   lodo=[];
+end
+ 
+% representative of movement for one month.
+kc_month = [];lodo = [];ca=[];ini_po=[0,0];
+
+for j = 1:10  
+    for m = 1:5
+       for i = 1:720
+           cd = vb{j};
+           cd1  = cd(randsample(1:10000,1),:);
+           ini_po = ini_po + cd1; 
+           ca = vertcat(ca,ini_po);  
+           
+       end
+       lodo = horzcat(lodo,ca);ca=[];ini_po=[0,0];
+    end
+   kc_month = horzcat(kc_month,lodo);
+   lodo=[];
+end
+
+
+gf = 0:2:size(kc_year,2);kcyear_dist=[];
+for j = 1:length(gf)-1
+    dg = (gf(j)+1:gf(j+1));
+    dg1 = kc_year(:,dg);
+    dg1 = diff(dg1);
+    dg2 = sqrt(dg1(:,1).^2+dg1(:,2).^2);
+    kcyear_dist = horzcat(kcyear_dist,dg2);
+end
+
+gf = 0:2:size(kc_month,2);kcm_dist=[];
+for j = 1:length(gf)-1
+    dg = (gf(j)+1:gf(j+1));
+    dg1 = kc_month(:,dg);
+    dg1 = diff(dg1);
+    dg2 = sqrt(dg1(:,1).^2+dg1(:,2).^2);
+    kcm_dist = horzcat(kcm_dist,dg2);
+end
+
+
+
+
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %synthetic data for outlier detection.
+
+mu = [0 0;0.0001 0.0001;0.001 0.001;0.01 0.01;0.1 0.1;...
+      1 1;1.5 1.5;2 2;2.5 2.5;3 3];
+vb = {};ini_po=[0,0];
+for i = 1:10
+    v = mu(i,:);
+    sigma = [v(1)+v(1)/4 v(1)+v(1)/4;v(1)+v(1)/4 v(1)+v(1)/4];
+    rng default
+    vb{i} = mvnrnd(v,sigma,10000);
+end
+
+
+
+
+out_data={};
+wb = [0.25,0.5,0.75,1];allofme={};
+
+id = [];traj = [];id_u=[];id_me={};
+for t = 1:length(wb)
+  for m = 1:66
+          
+     u = randsample(1:5,1);% selects the no of agents with abnormal movement.
+     id = vertcat(id,11-u,u);
+     cd = randsample(1:11,u);%selects the id of the agents with abnormal movement.
+     nncd = setdiff(1:11,cd);% gets the id of the normal ones
+    
+     abn_time = wb(1)*600; good_time = 600-abn_time;%computes the proportion of time for normal an dabnormal movements.
+          
+        
+     ghno = randsample(1:10,1);%selects the data bin for normal agents
+     jk = setdiff(1:10,ghno);%computes the remaining bin available for selection
+     ghno = vb{ghno};%selects the data bin for normal agents
+     ghan = vb{randsample(jk,1)};%selects the data bin for abnormal;
+     
+     tapo = [];%tapo1 = zeros(1,length(nncd)*2);
+     tapo1=[];
+     
+     for k = 1:length(nncd)%for normal
+         da = ghno(randsample(1:10000,600),:);
+         tapo = horzcat(tapo,da);
+     end
+     
+     tapo1 = vertcat(tapo1,tapo);  
+     tapo1 = cumsum(tapo1);
+     traj = horzcat(traj,tapo1);
+     tapo = [];
+     
+     
+     tapo = [];%tapo1 = zeros(1,length(cd)*2);
+     tapo1=[];
+     
+     for k = 1:length(cd)%for abnormal
+         da = ghan(randsample(1:10000,abn_time),:);
+         da = vertcat(da,ghno(randsample(1:10000,good_time),:));
+         tapo = horzcat(tapo,da);
+     end
+     
+     tapo1 = vertcat(tapo1,tapo);
+     tapo1 = cumsum(tapo1);
+     traj = horzcat(traj,tapo1);
+     tapo = [];tapo1=[];
+     
+     %traj = vertcat(traj,id);
+     out_data{m} = traj;id_u = horzcat(id_u,id);id=[];traj=[];
+  end
+   allofme{t} = out_data;out_data = {};id_me{t} = id_u;id_u=[];
+end
+
+
+library('readxl')
+data<-read.csv(file = "/Users/kehindeowoeye/Documents/MATLAB/HDPHMM_HDPSLDS-master/shortncd.csv");
+library('TSclust')   
+gec <- vector()
+gec1 <- vector()
+yy<-dim(data)
+z<-1:yy[2]
+for (t in z) {
+    for (m in z) {
+       gec<-c(gec,diss.NCD(as.numeric(sapply(data[t], floatToBin)),as.numeric(sapply(data[m], floatToBin))))
+    }
+    gec1<-c(gec1,gec)
+    gec <- vector() 
+ }
+
+
+ write.xlsx(gec1, "shor_NCD.xlsx")
+
+
+
+
+library('readxl')
+data<-read.csv(file = "/Users/kehindeowoeye/Documents/MATLAB/HDPHMM_HDPSLDS-master/longncd.csv");
+library('TSclust')   
+gec <- vector()
+gec1 <- vector()
+yy<-dim(data)
+z<-1:yy[2]
+for (t in z) {
+    for (m in z) {
+       gec<-c(gec,diss.NCD(as.numeric(sapply(data[t], floatToBin)),as.numeric(sapply(data[m], floatToBin))))
+    }
+    gec1<-c(gec1,gec)
+    gec <- vector() 
+ }
+
+
+ write.xlsx(gec1, "lon_NCD.xlsx")
+
