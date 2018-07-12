@@ -1,0 +1,110 @@
+l = 0.1:0.1:1.0;
+
+% Data for entropy
+
+abc = {};disc=[];disc1 = [];disc3=[];disc4=[];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+for ii = 1:6
+
+
+
+    vb = {};
+
+    for i = 1:10
+        vb{i} = gprnd(l(i),0.2,(0.2/l(i)),10000,1);
+    end
+
+ 
+
+    %for the normal, 
+
+    acc_normal=[];ini_po = [0,0];
+
+    for j = 1:1000
+         cd = vb{randsample(1:10,1)};
+%         dt = randsample(1:2,1);
+%         if dt==1
+%           cd = vb{randsample(1:2,1)};
+%         else
+%           cd = vb{randsample(1:10,1)};
+%         end
+        cd1  = cd(randsample(1:10000,1),:);
+        acc_normal = vertcat(acc_normal,cd1);
+
+    end
+
+ 
+
+ 
+
+    %for the sick
+
+    acc_sick=[];ini_po = [0,0];
+
+     for j = 1:1000
+        cd = vb{randsample([1,5],1)};
+        cd1  = cd(randsample(1:10000,1),:); 
+        acc_sick = vertcat(acc_sick,cd1);
+
+     end
+
+ 
+
+     dist1 = acc_normal;
+     dist2 = acc_sick;
+
+     
+     disc = horzcat(disc,dist1,dist2);
+     disc3 = horzcat(disc3,disc);
+
+   
+disc4 = disc;
+
+
+ disc1 = horzcat(disc1,disc4);
+
+  alldist = [disc4(:,1);disc4(:,2)];
+
+  alldist = sort(alldist);
+     
+ 
+
+ 
+
+     dd = length(alldist);ab = [];h = 5;df = 5;
+
+     while dd>=2
+
+       df =  mean(alldist(1:dd));
+
+       ab = vertcat(ab,df);
+
+       dd = numel(find(alldist<=df));
+
+     end
+     
+     alldist=[];disc=[];disc4=[];
+ abc{ii} = ab;
+end
+
+
+
+
+
+
+ca=[];ca2=[];u = 0;
+for i = 1:6
+    bound=[];
+
+    bound = sort(abc{i});%bound = vertcat(0,0,0,bound);
+    
+    c2 = disc1(:,u+1:u+2);u = u+2;disp(u)
+    %for j = 1:1
+    ent_ropy = entro(c2,2,bound); 
+    ca = vertcat(ca,ent_ropy);
+    %end
+     ca2 = horzcat(ca2,ca);ca=[];
+    
+end
