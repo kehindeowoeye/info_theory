@@ -1,0 +1,256 @@
+
+%Creates n no of agents where kk defines the duration with which the second leader wait before starting to follow
+%the first leader again
+
+% function randomwalk_multagents(step_num)
+% %Random walk for multiple agents
+% % clear
+% % clc
+global px; global py; global theta_all; global phi_all;global pz;
+theta_all=[];phi_all=[];global theta;
+prompt1 = 'What is the number of steps? ';
+prompt2 = 'What is the number of Agents? ';
+prompt3 = 'fraction of following times? ';
+ 
+step_num = input(prompt1);
+no_of_agents = input(prompt2);
+percent_follow = input(prompt3);
+newly_swept_areas=[];
+
+ 
+x = [0 1 2.5 3.6 5 7 8.1 10];
+y = sin(x);
+xb = 0:.01:10;
+yb = spline(x,y,xb);
+ybd = diff(yb);xbd = diff(xb);
+ 
+
+
+xx = 0.0001*rand(1,no_of_agents); yy = 0.0001*rand(1,no_of_agents);
+yy = xx; zz = yy;
+px = [];py = [];pz = [];r2 = [];surface_area = [];turn_angle = [];r = [];
+
+ 
+ R = 10 ;nBinsX = 8 ;nBinsY = 8 ;xg = linspace( -R, R, nBinsX+1 ) ;
+ yg= linspace(-R, R, nBinsY+1 );nCells = nBinsX * nBinsY ;
+  
+  
+ % - Build figure.
+ figure(1) ;  clf ;  hold on ;
+ set( gcf, 'Color', 'w', 'Units', 'Normalized', ...
+      'Position', [0.1,0.1,0.6,0.6] );
+   
+   
+ % - Plot grid.
+ plot( [xg;xg], repmat( [-R;R], 1, numel(xg)), 'Color', 0.8*[1,1,1] ) ;
+ plot( repmat( [-R;R], 1, numel( yg )), [yg;yg], 'Color', 0.8*[1,1,1] ) ;
+ xlim( 1.5*[-R,R] ) ;  ylim( 1.5*[-R,R] ) ;
+  
+ % - Plot cell IDs.
+ labels = arrayfun( @(k)sprintf( '%d', k ), 1:nCells, 'UniformOutput', false ) ;
+ [X,Y]  = meshgrid( (xg(1:end-1)+xg(2:end))/2, (yg(1:end-1)+yg(2:end))/2 ) ;
+ text( X(:), Y(:), labels, 'Color', 'b', 'FontSize', 14 ) ;
+ 
+
+ 
+ 
+ for i = 1:step_num
+     %theta = 360*rand(1,no_of_agents);%Polar angle
+     %phi   = 180*rand(1,no_of_agents);%Azimuth angle
+     theta = 360*rand(1,1);theta = horzcat(theta,zeros(1,no_of_agents-1));
+     phi   = 180*rand(1,1);phi = horzcat(phi,zeros(1,no_of_agents-1));
+     theta
+     phi
+     xx
+     theta_all = vertcat(theta_all,theta(1));phi_all = vertcat(phi_all,phi(1));
+     xx = xx + xbd(i);
+     %sind(phi).*cosd(theta);
+     px = [px;xx];
+     yy = yy + ybd(i);
+     %sind(phi).*sind(theta); 
+     py = [py;yy];
+     %zz = zz + cosd(phi);
+     %pz = [pz;zz];
+     
+       theta = [];phi=[];
+%      ux = px(2,2);uy=py(2,2);uz=pz(2,2);
+%      kx=[];ky=[];kz=[];
+       la = (1-percent_follow)*step_num ;la = round(la);
+       la
+       i
+       kk = 9;
+       if i>=la && i<kk*la
+          
+            ux = px(la-1,2:no_of_agents);uy=py(la-1,2:no_of_agents);
+            ux = ux+0;uy = uy + 0;
+            px(i,2:no_of_agents)=ux;py(i,2:no_of_agents)=uy;
+       elseif i>=kk*la && i<kk*1.5*la
+            thetax =xbd(i-(kk-1)*la+1); thetay = ybd(i-(kk-1)*la+1);
+            ux = px(i-1,2);uy=py(i-1,2);
+            ux = ux+ thetax;uy =uy + thetay;
+            px(i,2)=ux;py(i,2)=uy;
+            
+            ux = px(i-1,3:no_of_agents);uy=py(i-1,3:no_of_agents);
+            ux = ux+0;uy = uy + 0;
+            px(i,3:no_of_agents)=ux;py(i,3:no_of_agents)=uy;
+           
+       elseif i>=1.5*kk*la && i<1.5*kk*la + step_num
+           
+            thetax =xbd(i-(kk-1)*la+1); thetay = ybd(i-(kk-1)*la+1);
+            ux = px(i-1,2);uy=py(i-1,2);
+            ux = ux+ thetax;uy =uy + thetay;
+            px(i,2)=ux;py(i,2)=uy;
+            
+            thetax = xbd(i-(1.5*kk-1)*la+1); thetay = ybd(i-(1.5*kk-1)*la+1);
+            ux = px(i-1,3:no_of_agents);uy=py(i-1,3:no_of_agents);
+            ux = ux+thetax;uy = uy + thetay;
+            px(i,3:no_of_agents)=ux;py(i,3:no_of_agents)=uy;
+       
+       else
+       end
+      
+     CM = jet(no_of_agents);
+     for j = 1:no_of_agents
+        h(j) = animatedline('color',CM(j,:));
+        %addpoints(h(j),px(:,j),py(:,j),pz(:,j));
+        addpoints(h(j),px(:,j),py(:,j));
+     end
+      
+     set(gca,'XTickLabel',[]);
+     set(gca,'YTickLabel',[]);
+     drawnow 
+     pause(.1)
+     mov(i) = getframe(gcf); 
+ end
+ 
+% %     
+%end
+% % 
+
+
+
+% 
+% function randomwalk_multagents(step_num)
+% %Random walk for multiple agents
+% % clear
+% % clc
+% global px; global py; global theta_all; global phi_all;global pz;
+% theta_all=[];phi_all=[];global theta;
+% prompt1 = 'What is the number of steps? ';
+% prompt2 = 'What is the number of Agents? ';
+% prompt3 = 'fraction of following times? ';
+%  
+% step_num = input(prompt1);
+% no_of_agents = input(prompt2);
+% percent_follow = input(prompt3);
+% newly_swept_areas=[];
+% 
+%  
+% x = [0 1 2.5 3.6 5 7 8.1 10];
+% y = sin(x);
+% xb = 0:.01:10;
+% yb = spline(x,y,xb);
+% ybd = diff(yb);xbd = diff(xb);
+%  
+% 
+% 
+% xx = 0.0001*rand(1,no_of_agents); yy = 0.0001*rand(1,no_of_agents);
+% yy = xx; zz = yy;
+% px = [];py = [];pz = [];r2 = [];surface_area = [];turn_angle = [];r = [];
+% 
+%  
+%  R = 10 ;nBinsX = 8 ;nBinsY = 8 ;xg = linspace( -R, R, nBinsX+1 ) ;
+%  yg= linspace(-R, R, nBinsY+1 );nCells = nBinsX * nBinsY ;
+%   
+%   
+%  % - Build figure.
+%  figure(1) ;  clf ;  hold on ;
+%  set( gcf, 'Color', 'w', 'Units', 'Normalized', ...
+%       'Position', [0.1,0.1,0.6,0.6] );
+%    
+%    
+%  % - Plot grid.
+%  plot( [xg;xg], repmat( [-R;R], 1, numel(xg)), 'Color', 0.8*[1,1,1] ) ;
+%  plot( repmat( [-R;R], 1, numel( yg )), [yg;yg], 'Color', 0.8*[1,1,1] ) ;
+%  xlim( 1.5*[-R,R] ) ;  ylim( 1.5*[-R,R] ) ;
+%   
+%  % - Plot cell IDs.
+%  labels = arrayfun( @(k)sprintf( '%d', k ), 1:nCells, 'UniformOutput', false ) ;
+%  [X,Y]  = meshgrid( (xg(1:end-1)+xg(2:end))/2, (yg(1:end-1)+yg(2:end))/2 ) ;
+%  text( X(:), Y(:), labels, 'Color', 'b', 'FontSize', 14 ) ;
+%  
+% 
+%  
+%  
+%  for i = 1:step_num
+%      %theta = 360*rand(1,no_of_agents);%Polar angle
+%      %phi   = 180*rand(1,no_of_agents);%Azimuth angle
+%      theta = 360*rand(1,1);theta = horzcat(theta,zeros(1,no_of_agents-1));
+%      phi   = 180*rand(1,1);phi = horzcat(phi,zeros(1,no_of_agents-1));
+%      theta
+%      phi
+%      xx
+%      theta_all = vertcat(theta_all,theta(1));phi_all = vertcat(phi_all,phi(1));
+%      xx = xx + xbd(i);
+%      %sind(phi).*cosd(theta);
+%      px = [px;xx];
+%      yy = yy + ybd(i);
+%      %sind(phi).*sind(theta); 
+%      py = [py;yy];
+%      %zz = zz + cosd(phi);
+%      %pz = [pz;zz];
+%      
+%        theta = [];phi=[];
+% %      ux = px(2,2);uy=py(2,2);uz=pz(2,2);
+% %      kx=[];ky=[];kz=[];
+%        la = (1-percent_follow)*step_num ;la = round(la);
+%        la
+%        i
+%        kk = 5;
+%        if i>=kk*la && i<(kk+1)*la
+%           
+%             ux = px(kk*la-1,2:no_of_agents);uy=py(kk*la-1,2:no_of_agents);
+%             ux = ux+0;uy = uy + 0;
+%             px(i,2:no_of_agents)=ux;py(i,2:no_of_agents)=uy;
+%        elseif i>=(kk+1)*la && i<(kk+1)*1.5*la
+%             thetax = xbd(i-la+1); thetay = ybd(i-la+1);
+%             ux = px(i-1,2);uy=py(i-1,2);
+%             ux = ux+ thetax;uy =uy + thetay;
+%             px(i,2)=ux;py(i,2)=uy;
+%             
+%             ux = px(i-1,3:no_of_agents);uy=py(i-1,3:no_of_agents);
+%             ux = ux+0;uy = uy + 0;
+%             px(i,3:no_of_agents)=ux;py(i,3:no_of_agents)=uy;
+%            
+%        elseif i>=1.5*(kk+1)*la && i<1.5*(kk+1)*la + step_num
+%            
+%             thetax =xbd(i-la+1); thetay = ybd(i-la+1);
+%             ux = px(i-1,2);uy=py(i-1,2);
+%             ux = ux+ thetax;uy =uy + thetay;
+%             px(i,2)=ux;py(i,2)=uy;
+%             
+%             thetax = xbd(i-(1.5+0.5*kk)*la +1); thetay = ybd(i-(1.5+0.5*kk)*la+1);
+%             ux = px(i-1,3:no_of_agents);uy=py(i-1,3:no_of_agents);
+%             ux = ux+thetax;uy = uy + thetay;
+%             px(i,3:no_of_agents)=ux;py(i,3:no_of_agents)=uy;
+%        
+%        else
+%        end
+%       
+%      CM = jet(no_of_agents);
+%      for j = 1:no_of_agents
+%         h(j) = animatedline('color',CM(j,:));
+%         %addpoints(h(j),px(:,j),py(:,j),pz(:,j));
+%         addpoints(h(j),px(:,j),py(:,j));
+%      end
+%       
+%      set(gca,'XTickLabel',[]);
+%      set(gca,'YTickLabel',[]);
+%      drawnow 
+%      pause(.1)
+%      mov(i) = getframe(gcf); 
+%  end
+%  
+%     
+% end
+
