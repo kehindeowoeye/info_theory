@@ -17,7 +17,9 @@ no_of_agents = input(prompt2);
 percent_follow = input(prompt3);
 newly_swept_areas=[];
 
- 
+
+
+%Trajectory generating section
 x = [0 1 2.5 3.6 5 7 8.1 10];
 y = sin(x);
 xb = 0:.01:10;
