@@ -258,3 +258,42 @@ px = [];py = [];pz = [];r2 = [];surface_area = [];turn_angle = [];r = [];
 
 %This computes the turn angle from the x and y data.
 px1 = diff(px);py1 = diff(py);dd = atan2(py1,px1);dd1 = diff(dd);
+
+
+
+%Calculates the mutual information with a bit of noise added
+da = ca6;
+da = da + 0.000001*rand(size(da,1),size(da,2));
+dez = da;
+gh = [];gr = []; 
+for j = 1:size(dez,2)
+    for k = 1:size(dez,2)
+        gh = horzcat(gh,MutualInfo((dez(:,j)'),(dez(:,k)'))); 
+    end 
+    gr = vertcat(gr,gh); 
+    gh = []; 
+end 
+ca6m = gr;
+
+
+%Computes significant mutual information with synthetic data.
+real_data = da;
+r = min(min(real_data)) + (max(max(real_data))-min(min(real_data))).*(rand(size(real_data,1),size(real_data,2)));
+ Num_iter = 10;max_acc = [];
+ for i = 1:Num_iter
+    gh = [];gr = []; 
+    for j = 1:size(r,2)
+       for k = 1:size(r,2)
+           gh = horzcat(gh,MutualInfo((r(:,j)'),(r(:,k)'))); 
+       end 
+       gr = vertcat(gr,gh); 
+       gh = []; 
+    end 
+    gr(logical(eye(size(gr)))) = [];%remove diagonal elements
+    max_acc = horzcat(max_acc,max(max(gr)));
+    gr=[];
+end
+
+tca6 = mean(max_acc);%Threshold to detect significant associations.
+
+
