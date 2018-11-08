@@ -256,3 +256,5 @@ px = [];py = [];pz = [];r2 = [];surface_area = [];turn_angle = [];r = [];
 %     
 % end
 
+%This computes the turn angle from the x and y data.
+px1 = diff(px);py1 = diff(py);dd = atan2(py1,px1);dd1 = diff(dd);
