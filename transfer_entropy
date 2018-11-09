@@ -1,0 +1,43 @@
+teCalc=javaObject('infodynamics.measures.continuous.kernel.TransferEntropyCalculatorKernel');
+teCalc.setProperty('NORMALISE', 'true'); % Normalise the individual variables
+teCalc.initialise(1, 0.5); % Use history length 1 (Schreiber k=1), kernel width of 0.5 normalised units
+
+da = ca9;
+da = da + 0.000001*rand(size(da,1),size(da,2));
+dez = da;
+gh = [];gr = []; 
+for j = 1:size(dez,2)
+    for k = 1:size(dez,2)
+        teCalc.initialise();
+        teCalc.setObservations((dez(:,j)'),(dez(:,k)')); 
+        result2 = teCalc.computeAverageLocalOfObservations();
+        gh = horzcat(gh,result2);
+    end 
+    gr = vertcat(gr,gh); 
+    gh = []; 
+end 
+ca9te = gr;
+
+%Computes significant mutual information with synthetic data.
+real_data = da;
+r = min(min(real_data)) + (max(max(real_data))-min(min(real_data))).*(rand(size(real_data,1),size(real_data,2)));
+ Num_iter = 10;max_acc = [];
+ for i = 1:Num_iter
+    gh = [];gr = []; 
+    for j = 1:size(r,2)
+       for k = 1:size(r,2)
+           teCalc.initialise();
+           teCalc.setObservations((r(:,j)'),(r(:,k)')); 
+           result2 = teCalc.computeAverageLocalOfObservations();
+           gh = horzcat(gh,result2);
+       end 
+       gr = vertcat(gr,gh); 
+       gh = []; 
+    end 
+    gr(logical(eye(size(gr)))) = [];%remove diagonal elements
+    max_acc = horzcat(max_acc,max(max(gr)));
+    gr=[];
+end
+
+teca9 = mean(max_acc);%Threshold to detect significant associations.
+
