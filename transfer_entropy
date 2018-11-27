@@ -1,7 +1,11 @@
 javaaddpath('infodynamics.jar');
-teCalc=javaObject('infodynamics.measures.continuous.kernel.TransferEntropyCalculatorKernel');
-teCalc.setProperty('NORMALISE', 'true'); % Normalise the individual variables
-teCalc.initialise(1, 0.5); % Use history length 1 (Schreiber k=1), kernel width of 0.5 normalised units
+#teCalc=javaObject('infodynamics.measures.continuous.kernel.TransferEntropyCalculatorKernel');
+#teCalc.setProperty('NORMALISE', 'true'); % Normalise the individual variables
+#teCalc.initialise(1, 0.5); % Use history length 1 (Schreiber k=1), kernel width of 0.5 normalised units
+
+teCalc=javaObject('infodynamics.measures.continuous.kraskov.TransferEntropyCalculatorKraskov');
+teCalc.initialise(1); % Use history length 1 (Schreiber k=1)
+teCalc.setProperty('k', '4'); % Use Kraskov parameter K=4 for 4 nearest points
 
 da = ca9;
 da = da + 0.000001*rand(size(da,1),size(da,2));
