@@ -1,3 +1,4 @@
+javaaddpath('infodynamics.jar');
 teCalc=javaObject('infodynamics.measures.continuous.kernel.TransferEntropyCalculatorKernel');
 teCalc.setProperty('NORMALISE', 'true'); % Normalise the individual variables
 teCalc.initialise(1, 0.5); % Use history length 1 (Schreiber k=1), kernel width of 0.5 normalised units
