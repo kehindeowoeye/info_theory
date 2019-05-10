@@ -1,0 +1,51 @@
+%Mutual information kraskov estimator 
+
+
+
+javaaddpath('infodynamics.jar');
+
+
+miCalc=javaObject('infodynamics.measures.continuous.kraskov.MutualInfoCalculatorMultiVariateKraskov2');
+miCalc.initialise(1,1); % univariate calculation
+miCalc.setProperty('k', '4');
+
+dez = xlsread('pige2');
+
+gh = [];gr = []; 
+for j = 1:size(dez,2)
+    for k = 1:size(dez,2)
+        miCalc.initialise();
+        miCalc.setObservations((dez(:,j)'),(dez(:,k)')); 
+        result2 = miCalc.computeAverageLocalOfObservations();
+        gh = horzcat(gh,result2);
+    end 
+    gr = vertcat(gr,gh); 
+    gh = []; 
+end 
+MI = gr;
+
+
+
+
+%Computes significant mutual information with synthetic data.
+real_data = dez;
+r = min(min(real_data)) + (max(max(real_data))-min(min(real_data))).*(rand(size(real_data,1),size(real_data,2)));
+ Num_iter = 10;max_acc = [];
+ for i = 1:Num_iter
+    gh = [];gr = []; 
+    for j = 1:size(r,2)
+       for k = 1:size(r,2)
+           miCalc.initialise();
+           miCalc.setObservations((r(:,j)'),(r(:,k)')); 
+           result2 = miCalc.computeAverageLocalOfObservations();
+           gh = horzcat(gh,result2);
+       end 
+       gr = vertcat(gr,gh); 
+       gh = []; 
+    end 
+    gr(logical(eye(size(gr)))) = [];%remove diagonal elements
+    max_acc = horzcat(max_acc,max(max(gr)));
+    gr=[];
+end
+
+threshold = mean(max_acc);%Threshold to detect significant associations.
