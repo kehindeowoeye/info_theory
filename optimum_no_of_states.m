@@ -1,7 +1,7 @@
 %selects the optimum number of states using GMM
 rng default
 
-yp=[];yp = 0;
+yp=[];
 acc = data;
 
 
@@ -16,3 +16,6 @@ for j = 1:100
  [minAIC,numComponents] = min(AIC);yp = horzcat(yp,numComponents);
 end
 yp = mean(yp);
+
+
+%gives roughly 16 states
