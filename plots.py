@@ -2,8 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
-
 x3 = np.array([14.3609300000000,12.9309200000000,11.3753320000000,15.8505500000000,13.3773290000000,14.6710650000000])
 x2 =np.array([9.58607, 8.79108, 7.970668, 7.33545, 9.005671, 9.495935]);
 x2 = x2/5;
@@ -25,14 +23,14 @@ for i in range (0, len(x3)):
     plt.plot(t[i],x2[i], '-or', label='Batten Sheep' ,markersize=ysize[i])
 
 plt.plot(t, x2, linestyle="--", color="r")
-plt.xlabel('Days')
-plt.ylabel('Entropy(bits)')
-plt.title('Mean variation in entropy over six days')
+plt.xlabel('Days',fontsize=14)
+plt.ylabel('Entropy(bits)',fontsize=14)
+plt.title('Mean variation in entropy over six days',fontsize=14)
 plt.xticks(t,my_xticks)
 
 p1, = plt.plot(t, x3, linestyle="-", color="b")
 p2, = plt.plot(t, x2, linestyle="--", color="r")
-plt.legend([p1,p2],["Normal Sheep","Batten Sheep"])
+plt.legend([p1,p2],["Normal Sheep","Batten Sheep"],prop={"size":14,'weight':'bold'})
 #handles, labels = ax.get_legend_handles_labels()
 #ax.legend(handles,labels)
 
@@ -65,14 +63,14 @@ for i in range (0, len(x3)):
     plt.plot(t[i],x2[i], '-or', label='Batten Sheep')
 
 plt.plot(t, x2, linestyle="--", color="r")
-plt.xlabel('Days')
-plt.ylabel('Mean distance covered(m)')
-plt.title('Mean distance covered over six days')
+plt.xlabel('Days',fontsize=14)
+plt.ylabel('Mean distance covered(m)',fontsize=14)
+plt.title('Mean distance covered over six days',fontsize=14)
 plt.xticks(t,my_xticks)
 
 p1, = plt.plot(t, x3, linestyle="-", color="b")
 p2, = plt.plot(t, x2, linestyle="--", color="r")
-plt.legend([p1,p2],["Normal Sheep","Batten Sheep"])
+plt.legend([p1,p2],["Normal Sheep","Batten Sheep"],prop={"size":14,'weight':'bold'})
 #handles, labels = ax.get_legend_handles_labels()
 #ax.legend(handles,labels)
 
@@ -101,16 +99,16 @@ for i in range (0, len(x3)):
     plt.plot(t[i],x2[i], '-or', label='Batten Sheep')
 
 plt.plot(t, x2, linestyle="--", color="r")
-plt.xlabel('Days')
-plt.ylabel('Mean variance')
-plt.title('Mean variance of distance covered over six days')
+plt.xlabel('Days',fontsize=14)
+plt.ylabel('Mean variance',fontsize=14)
+plt.title('Mean variance of distance covered over six days',fontsize=14)
 plt.xticks(t,my_xticks)
 
 
 
 p1, = plt.plot(t, x3, linestyle="-", color="b")
 p2, = plt.plot(t, x2, linestyle="--", color="r")
-plt.legend([p1,p2],["Normal Sheep","Batten Sheep"])
+plt.legend([p1,p2],["Normal Sheep","Batten Sheep"],prop={"size":14,'weight':'bold'})
 #handles, labels = ax.get_legend_handles_labels()
 #ax.legend(handles,labels)
 
@@ -125,28 +123,25 @@ x2 =np.array([1.38952722818897,1.16201605400818,1.33041569944706,1.2019570104102
 
 t = list(range(1,7))
 
-ax = axs[0,0]
-ax.errorbar(x, y, yerr=yerr, fmt='o')
+#ax = axes[0,0]
+#ax.errorbar(x, y, yerr=yerr, fmt='o')
 
 
 my_xticks = ['1st','2nd','3rd','4th','5th','6th'];
-
 bar2 = np.array([0.0469835517837369, 0.0620871408182204, 0.0461825176383515, 0.0673727062579248, 0.0520722843063135,0.0461345946539694]);
 bar1 = np.array([0.0355559331182429, 0.0418583793104196,0.0461302237262728,0.0297315006077399,0.0357991334647614,0.0538540292194969])
-
-
 
 plt.xlim([0,7])
 plt.ylim([0.9,2.5])
 plt.plot(t, x2, linestyle="--", color="r")
-plt.xlabel('Days')
-plt.ylabel('Entropy(bits)')
-plt.title('Mean variation in entropy over six days with synthetic data')
+plt.xlabel('Days',fontsize=18,fontweight='bold')
+plt.ylabel('Entropy(bits)',fontsize=18,fontweight='bold')
+plt.title('Mean variation in entropy over six days with synthetic data',fontsize=12,fontweight='bold')
 plt.xticks(t,my_xticks)
 
-p1, = plt.errorbar(t, x3,xerr=bar1,yerr=bar1, linestyle="-", color="b")
-p2, = plt.errorbar(t, x2, xerr = bar2, yerr = bar2, linestyle="--", color="r")
-plt.legend([p1,p2],["Normal Sheep","Abnormal Sheep"],loc='upper right')
+p1 = plt.errorbar(t, x3, yerr=  bar1, linestyle="-",  color="b")
+p2 = plt.errorbar(t, x2, yerr = bar2, linestyle="--", color="r")
+plt.legend([p1,p2],["Normal Sheep","Abnormal Sheep"],loc='upper right',prop={"size":14,'weight':'bold'})
 #handles, labels = ax.get_legend_handles_labels()
 #ax.legend(handles,labels)
 
