@@ -118,3 +118,37 @@ plt.savefig('f13.eps',format='eps',dpi=1000)
 plt.show()
 
 
+
+
+x3 = np.array([1.96168672787661,1.78315064305665,1.89222664274969,1.88734229857179,1.95939829859849,1.63128307158802])
+x2 =np.array([1.38952722818897,1.16201605400818,1.33041569944706,1.20195701041029,1.38064513566515,1.00050517019464]);
+
+t = list(range(1,7))
+
+ax = axs[0,0]
+ax.errorbar(x, y, yerr=yerr, fmt='o')
+
+
+my_xticks = ['1st','2nd','3rd','4th','5th','6th'];
+
+bar2 = np.array([0.0469835517837369, 0.0620871408182204, 0.0461825176383515, 0.0673727062579248, 0.0520722843063135,0.0461345946539694]);
+bar1 = np.array([0.0355559331182429, 0.0418583793104196,0.0461302237262728,0.0297315006077399,0.0357991334647614,0.0538540292194969])
+
+
+
+plt.xlim([0,7])
+plt.ylim([0.9,2.5])
+plt.plot(t, x2, linestyle="--", color="r")
+plt.xlabel('Days')
+plt.ylabel('Entropy(bits)')
+plt.title('Mean variation in entropy over six days with synthetic data')
+plt.xticks(t,my_xticks)
+
+p1, = plt.errorbar(t, x3,xerr=bar1,yerr=bar1, linestyle="-", color="b")
+p2, = plt.errorbar(t, x2, xerr = bar2, yerr = bar2, linestyle="--", color="r")
+plt.legend([p1,p2],["Normal Sheep","Abnormal Sheep"],loc='upper right')
+#handles, labels = ax.get_legend_handles_labels()
+#ax.legend(handles,labels)
+
+plt.savefig('syth.eps',format='eps',dpi=1000)
+plt.show()
